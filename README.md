@@ -1,173 +1,100 @@
-# Stable Diffusion web UI
-A web interface for Stable Diffusion, implemented using Gradio library.
+# Automated Polygon Generation for Improved Text-to-Image Synthesis
 
-![](screenshot.png)
+An Enhanced Pipeline for Better Object Placement in Generated Images
+
+![Screenshot](screenshot.png)
+
+## Overview
+
+This project presents a pipeline that integrates **Llama 3** with the **MultiDiffusion** model to automate the generation of bounding polygons for objects in text-to-image synthesis. By leveraging Llama 3's spatial reasoning capabilities, the pipeline enhances image generation by ensuring logical placement of objects as described in complex text prompts.
 
 ## Features
-[Detailed feature showcase with images](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features):
-- Original txt2img and img2img modes
-- One click install and run script (but you still must install python and git)
-- Outpainting
-- Inpainting
-- Color Sketch
-- Prompt Matrix
-- Stable Diffusion Upscale
-- Attention, specify parts of text that the model should pay more attention to
-    - a man in a `((tuxedo))` - will pay more attention to tuxedo
-    - a man in a `(tuxedo:1.21)` - alternative syntax
-    - select text and press `Ctrl+Up` or `Ctrl+Down` (or `Command+Up` or `Command+Down` if you're on a MacOS) to automatically adjust attention to selected text (code contributed by anonymous user)
-- Loopback, run img2img processing multiple times
-- X/Y/Z plot, a way to draw a 3 dimensional plot of images with different parameters
-- Textual Inversion
-    - have as many embeddings as you want and use any names you like for them
-    - use multiple embeddings with different numbers of vectors per token
-    - works with half precision floating point numbers
-    - train embeddings on 8GB (also reports of 6GB working)
-- Extras tab with:
-    - GFPGAN, neural network that fixes faces
-    - CodeFormer, face restoration tool as an alternative to GFPGAN
-    - RealESRGAN, neural network upscaler
-    - ESRGAN, neural network upscaler with a lot of third party models
-    - SwinIR and Swin2SR ([see here](https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/2092)), neural network upscalers
-    - LDSR, Latent diffusion super resolution upscaling
-- Resizing aspect ratio options
-- Sampling method selection
-    - Adjust sampler eta values (noise multiplier)
-    - More advanced noise setting options
-- Interrupt processing at any time
-- 4GB video card support (also reports of 2GB working)
-- Correct seeds for batches
-- Live prompt token length validation
-- Generation parameters
-     - parameters you used to generate images are saved with that image
-     - in PNG chunks for PNG, in EXIF for JPEG
-     - can drag the image to PNG info tab to restore generation parameters and automatically copy them into UI
-     - can be disabled in settings
-     - drag and drop an image/text-parameters to promptbox
-- Read Generation Parameters Button, loads parameters in promptbox to UI
-- Settings page
-- Running arbitrary python code from UI (must run with `--allow-code` to enable)
-- Mouseover hints for most UI elements
-- Possible to change defaults/mix/max/step values for UI elements via text config
-- Tiling support, a checkbox to create images that can be tiled like textures
-- Progress bar and live image generation preview
-    - Can use a separate neural network to produce previews with almost none VRAM or compute requirement
-- Negative prompt, an extra text field that allows you to list what you don't want to see in generated image
-- Styles, a way to save part of prompt and easily apply them via dropdown later
-- Variations, a way to generate same image but with tiny differences
-- Seed resizing, a way to generate same image but at slightly different resolution
-- CLIP interrogator, a button that tries to guess prompt from an image
-- Prompt Editing, a way to change prompt mid-generation, say to start making a watermelon and switch to anime girl midway
-- Batch Processing, process a group of files using img2img
-- Img2img Alternative, reverse Euler method of cross attention control
-- Highres Fix, a convenience option to produce high resolution pictures in one click without usual distortions
-- Reloading checkpoints on the fly
-- Checkpoint Merger, a tab that allows you to merge up to 3 checkpoints into one
-- [Custom scripts](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Custom-Scripts) with many extensions from community
-- [Composable-Diffusion](https://energy-based-model.github.io/Compositional-Visual-Generation-with-Composable-Diffusion-Models/), a way to use multiple prompts at once
-     - separate prompts using uppercase `AND`
-     - also supports weights for prompts: `a cat :1.2 AND a dog AND a penguin :2.2`
-- No token limit for prompts (original stable diffusion lets you use up to 75 tokens)
-- DeepDanbooru integration, creates danbooru style tags for anime prompts
-- [xformers](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Xformers), major speed increase for select cards: (add `--xformers` to commandline args)
-- via extension: [History tab](https://github.com/yfszzx/stable-diffusion-webui-images-browser): view, direct and delete images conveniently within the UI
-- Generate forever option
-- Training tab
-     - hypernetworks and embeddings options
-     - Preprocessing images: cropping, mirroring, autotagging using BLIP or deepdanbooru (for anime)
-- Clip skip
-- Hypernetworks
-- Loras (same as Hypernetworks but more pretty)
-- A separate UI where you can choose, with preview, which embeddings, hypernetworks or Loras to add to your prompt
-- Can select to load a different VAE from settings screen
-- Estimated completion time in progress bar
-- API
-- Support for dedicated [inpainting model](https://github.com/runwayml/stable-diffusion#inpainting-with-stable-diffusion) by RunwayML
-- via extension: [Aesthetic Gradients](https://github.com/AUTOMATIC1111/stable-diffusion-webui-aesthetic-gradients), a way to generate images with a specific aesthetic by using clip images embeds (implementation of [https://github.com/vicgalle/stable-diffusion-aesthetic-gradients](https://github.com/vicgalle/stable-diffusion-aesthetic-gradients))
-- [Stable Diffusion 2.0](https://github.com/Stability-AI/stablediffusion) support - see [wiki](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20) for instructions
-- [Alt-Diffusion](https://arxiv.org/abs/2211.06679) support - see [wiki](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#alt-diffusion) for instructions
-- Now without any bad letters!
-- Load checkpoints in safetensors format
-- Eased resolution restriction: generated image's dimensions must be a multiple of 8 rather than 64
-- Now with a license!
-- Reorder elements in the UI from settings screen
-- [Segmind Stable Diffusion](https://huggingface.co/segmind/SSD-1B) support
 
-## Installation and Running
-Make sure the required [dependencies](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Dependencies) are met and follow the instructions available for:
-- [NVidia](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs) (recommended)
-- [AMD](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-AMD-GPUs) GPUs.
-- [Intel CPUs, Intel GPUs (both integrated and discrete)](https://github.com/openvinotoolkit/stable-diffusion-webui/wiki/Installation-on-Intel-Silicon) (external wiki page)
-- [Ascend NPUs](https://github.com/wangshuai09/stable-diffusion-webui/wiki/Install-and-run-on-Ascend-NPUs) (external wiki page)
+- **Automated Polygon Generation**
+  - Integrates Llama 3 to automatically generate bounding boxes for objects, eliminating the need for manual adjustments.
 
-Alternatively, use online services (like Google Colab):
+- **Enhanced Text-to-Image Synthesis with MultiDiffusion**
+  - Improves the MultiDiffusion model to produce high-quality images that accurately reflect complex text prompts, ensuring all objects are present in the final image with logical placements.
 
-- [List of Online Services](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Online-Services)
+- **Streamlined and Efficient Image Generation Pipeline**
+  - Reduces manual intervention and computational overhead, optimizing the workflow for faster and more efficient image synthesis that closely aligns with textual descriptions.
+  - Utilizes a user-friendly UI for ease of use.
 
-### Installation on Windows 10/11 with NVidia-GPUs using release package
-1. Download `sd.webui.zip` from [v1.0.0-pre](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.0.0-pre) and extract its contents.
-2. Run `update.bat`.
-3. Run `run.bat`.
-> For more details see [Install-and-Run-on-NVidia-GPUs](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs)
+## Installation and Usage
 
-### Automatic Installation on Windows
-1. Install [Python 3.10.6](https://www.python.org/downloads/release/python-3106/) (Newer version of Python does not support torch), checking "Add Python to PATH".
-2. Install [git](https://git-scm.com/download/win).
-3. Download the stable-diffusion-webui repository, for example by running `git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git`.
-4. Run `webui-user.bat` from Windows Explorer as normal, non-administrator, user.
+### Prerequisites
 
-### Automatic Installation on Linux
-1. Install the dependencies:
-```bash
-# Debian-based:
-sudo apt install wget git python3 python3-venv libgl1 libglib2.0-0
-# Red Hat-based:
-sudo dnf install wget git python3 gperftools-libs libglvnd-glx
-# openSUSE-based:
-sudo zypper install wget git python3 libtcmalloc4 libglvnd
-# Arch-based:
-sudo pacman -S wget git python3
-```
-If your system is very new, you need to install python3.11 or python3.10:
-```bash
-# Ubuntu 24.04
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.11
+- **Python 3.10.6**
+  - Note: Newer versions of Python may not support `torch`.
+- **Git**
+- **Hugging Face Account**
+  - Obtain an API token for Llama 3 from [Hugging Face](https://huggingface.co/).
 
-# Manjaro/Arch
-sudo pacman -S yay
-yay -S python311 # do not confuse with python3.11 package
+### Installation
 
-# Only for 3.11
-# Then set up env variable in launch script
-export python_cmd="python3.11"
-# or in webui-user.sh
-python_cmd="python3.11"
-```
-2. Navigate to the directory you would like the webui to be installed and execute the following command:
-```bash
-wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh
-```
-Or just clone the repo wherever you want:
-```bash
-git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
-```
+1. **Clone the Repository**
 
-3. Run `webui.sh`.
-4. Check `webui-user.sh` for options.
-### Installation on Apple Silicon
+   Open your terminal or command prompt and run:
 
-Find the instructions [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Installation-on-Apple-Silicon).
+   ```bash
+   git clone https://github.com/MonkeySitter/DL-Project-Diffusion-Pipeline.git
+   ```
 
-## Contributing
-Here's how to add code to this repo: [Contributing](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Contributing)
+2. **Download a Diffusion Model**
 
-## Documentation
+   - Place the downloaded model in the `Models` folder within the cloned repository.
 
-The documentation was moved from this README over to the project's [wiki](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki).
+3. **Install Required Python Packages**
 
-For the purposes of getting Google and other search engines to crawl the wiki, here's a link to the (not for humans) [crawlable wiki](https://github-wiki-see.page/m/AUTOMATIC1111/stable-diffusion-webui/wiki).
+   Navigate to the project directory and install the required packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install the MultiDiffusion Upscaler Extension**
+
+   Create an `extensions` folder if it doesn't exist, navigate into it, and clone the MultiDiffusion upscaler:
+
+   ```bash
+   mkdir extensions
+   cd extensions
+   git clone https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111.git
+   ```
+
+5. **Obtain a Llama 3 API Token**
+
+   - Sign up or log in to your Hugging Face account.
+   - Navigate to your account settings to generate an API token.
+   - Save this token; you'll need it for running the pipeline.
+
+### Usage
+
+1. **Generate Configuration Files**
+
+   - Open the `One_step_approach.ipynb` notebook using Jupyter Notebook or any compatible environment.
+   - Replace the placeholder with your Hugging Face API token when prompted.
+   - Run the notebook to generate the configuration files needed for image generation.
+
+2. **Run the Application**
+
+   Navigate back to the project root directory and start the application:
+
+   ```bash
+   python launch.py --listen --port 7860
+   ```
+
+   - The `--listen` flag allows connections from other machines.
+   - The `--port` flag specifies the port number (you can change `7860` to any available port).
+
+3. **Optimize and Generate Images**
+
+   - Open a web browser and navigate to `http://localhost:7860` or `http://your-server-ip:7860` if running on a remote server.
+   - Load your configuration file.
+   - Adjust the sliders and settings to optimize the image generation process according to your preferences.
+   - Initiate the image generation and view the results directly in the UI.
+
+
 
 ## Credits
 Licenses for borrowed code can be found in `Settings -> Licenses` screen, and also in `html/licenses.html` file.
@@ -202,4 +129,6 @@ Licenses for borrowed code can be found in `Settings -> Licenses` screen, and al
 - Restart sampling - lambertae - https://github.com/Newbeeer/diffusion_restart_sampling
 - Hypertile - tfernd - https://github.com/tfernd/HyperTile
 - Initial Gradio script - posted on 4chan by an Anonymous user. Thank you Anonymous user.
-- (You)
+- AUTOMATIC1111 - https://github.com/AUTOMATIC1111/stable-diffusion-webui
+- pkuliyi2015 - https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111
+- Morris Alper - https://github.com/morrisalp/
